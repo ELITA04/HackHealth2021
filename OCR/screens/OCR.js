@@ -23,7 +23,8 @@ export default class OCRScreen extends React.Component {
     state = {
       image: null,
       uploading: false,
-      googleResponse: null
+      googleResponse: null,
+      googleLoading: false
     };
     
     async componentDidMount() {
@@ -37,33 +38,26 @@ export default class OCRScreen extends React.Component {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           {image ? null : (
-            <Text
-              style={{
-                fontSize: 20,
-                marginBottom: 20,
-                textAlign: 'center',
-                marginHorizontal: 15,
-              }}>
-              Example: Upload ImagePicker result
-            </Text>
-          )}
-  
-          <Button
-            onPress={this._pickImage}
-            title="Pick an image from camera roll"
-          />
-          <Button onPress={this._takePhoto} title="Take a photo" />
-          {this.state.googleResponse && (
-                <FlatList
-                  data={this.state.googleResponse.responses[0].labelAnnotations}
-                  extraData={this.state}
-                  keyExtractor={this._keyExtractor}
-                  renderItem={({ item }) => <Text>Item: {item.description}</Text>}
+              <View>
+                <Text
+                    style={{
+                        fontSize: 20,
+                        marginBottom: 20,
+                        textAlign: 'center',
+                        marginHorizontal: 15,
+                    }}>
+                    Example: Upload ImagePicker result
+                    </Text>
+                <Button
+                    onPress={this._pickImage}
+                    title="Pick an image from camera roll"
                 />
-              )}
-  
+                <Button onPress={this._takePhoto} title="Take a photo" />
+              </View> 
+          )}
           {this._maybeRenderImage()}
           {this._maybeRenderUploadingOverlay()}
+          {this._maybeRenderResponse()}
           <StatusBar barStyle="default" />
         </View>
       );
@@ -71,7 +65,7 @@ export default class OCRScreen extends React.Component {
   
     submitToGoogle = async () => {
       try {
-        this.setState({ uploading: true });
+        this.setState({ googleLoading: true });
         let { image } = this.state;
         let body = JSON.stringify({
           requests: [
@@ -100,16 +94,17 @@ export default class OCRScreen extends React.Component {
           }
         );
         let responseJson = await response.json();
-        console.log(responseJson);
+
         this.setState({
           googleResponse: responseJson,
-          uploading: false
+          googleLoading: false
         });
       } catch (error) {
         console.log(error);
       }
     };
   
+    // when image is loading
     _maybeRenderUploadingOverlay = () => {
       if (this.state.uploading) {
         return (
@@ -127,13 +122,32 @@ export default class OCRScreen extends React.Component {
         );
       }
     };
+
+    // when google is analyzing
+    _maybeRenderAnalyzingOverlay = () => {
+        if (this.state.googleLoading) {
+          return (
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  backgroundColor: 'rgba(0,0,0,0.4)',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              ]}>
+              <ActivityIndicator color="#000000" animating size="large" />
+            </View>
+          );
+        }
+      };
   
+    // if image exists, display until google is successfully loading
     _maybeRenderImage = () => {
-      let { image, googleResponse } = this.state;
+      let { image } = this.state;
       if (!image) {
         return;
       }
-  
       return (
         <View
           style={{
@@ -141,13 +155,7 @@ export default class OCRScreen extends React.Component {
             width: 250,
             borderRadius: 3,
             elevation: 2,
-          }}>
-            <Button
-            style={{ marginBottom: 10 }}
-            onPress={() => this.submitToGoogle()}
-            title="Analyze!"
-          />
-  
+          }}>    
           <View
             style={{
               borderTopRightRadius: 3,
@@ -160,45 +168,36 @@ export default class OCRScreen extends React.Component {
             }}>
             <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
           </View>
-  
-          <Text
-            onPress={this._copyToClipboard}
-            onLongPress={this._share}
-            style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
-            {image}
-          </Text>
-          <Text>Raw JSON:</Text>
-            {googleResponse && (
-              <Text
-                onPress={this._copyToClipboard}
-                onLongPress={this._share}
-                style={{ paddingVertical: 10, paddingHorizontal: 10 }}
-              >
-                JSON.stringify(googleResponse.responses)}
-              </Text>
-            )}
+
+          <Button
+            style={{ marginBottom: 10 }}
+            onPress={() => this.submitToGoogle()}
+            title="Analyze!"
+          />
         </View>
       );
     };
-  
-    _keyExtractor = (item, index) => item.id;
-  
-    _renderItem = item => {
-      <Text>response: {JSON.stringify(item)}</Text>;
-    };
-  
-    _share = () => {
-      Share.share({
-        message: this.state.image,
-        title: 'Check out this photo',
-        url: this.state.image,
-      });
-    };
-  
-    _copyToClipboard = () => {
-      Clipboard.setString(this.state.image);
-      alert('Copied image URL to clipboard');
-    };
+
+    _maybeRenderResponse = () => {
+        let { googleResponse } = this.state;
+        if (!googleResponse) {
+            return;
+        }
+        const response = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description).replace("\n", " ");
+        console.log(response);
+        return (
+            <View>
+                <Text>Raw JSON:</Text>
+                {googleResponse && (
+                <Text
+                    style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+                >
+                    {response}
+                </Text>
+                )}
+            </View>
+        )
+    }
   
     _takePhoto = async () => {
       let pickerResult = await ImagePicker.launchCameraAsync({
