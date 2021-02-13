@@ -1,0 +1,12 @@
+{
+  "name": "OCR",
+  "displayName": "OCR",
+  "expo": {
+    "name": "OCR",
+    "slug": "OCR",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
