@@ -46,7 +46,8 @@ export default class OCRScreen extends React.Component {
                         textAlign: 'center',
                         marginHorizontal: 15,
                     }}>
-                    Example: Upload ImagePicker result
+                    Would you like to pick an image from your camera roll or take a photo?
+                    Listening...
                     </Text>
                 <Button
                     onPress={this._pickImage}
@@ -144,8 +145,8 @@ export default class OCRScreen extends React.Component {
   
     // if image exists, display until google is successfully loading
     _maybeRenderImage = () => {
-      let { image } = this.state;
-      if (!image) {
+      let { image, googleResponse } = this.state;
+      if (!image || (image && googleResponse)) {
         return;
       }
       return (
@@ -178,16 +179,23 @@ export default class OCRScreen extends React.Component {
       );
     };
 
+    // render google response and allow user to listen
     _maybeRenderResponse = () => {
         let { googleResponse } = this.state;
         if (!googleResponse) {
             return;
         }
-        const response = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description).replace("\n", " ");
-        console.log(response);
+
+        const response = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description).replace(/\\n/g, ' ');
+
+        const speak = () => {
+            const thingToSay = response;
+            Speech.speak(thingToSay);
+          };
+
         return (
             <View>
-                <Text>Raw JSON:</Text>
+                <Button title="Press to listen" onPress={speak} />
                 {googleResponse && (
                 <Text
                     style={{ paddingVertical: 10, paddingHorizontal: 10 }}
@@ -262,19 +270,3 @@ export default class OCRScreen extends React.Component {
   
     return await snapshot.ref.getDownloadURL();
   }
-
-// const OCRScreen = ({ navigation, route }) => {
-//     const speak = () => {
-//         const thingToSay = '1';
-//         Speech.speak(thingToSay);
-//       };
-      
-//     return (
-//         <View>
-//             <Text>Real Time Object Recogniton</Text>
-            
-//             <Button title="Press to hear some words" onPress={speak} />
-//         </View>
-//     );
-//   };
-
