@@ -28,7 +28,6 @@ For text extraction, we used the Google Cloud Vision API to detect and extract t
 
 ## Challenges we ran into🕵️‍♀️
 
-**Victoria:**
 
 **Anusha:** Since our React Native app was created with Expo, there was a bit of a challenge integrating it with firebase and the Google API.
 
@@ -38,7 +37,7 @@ For text extraction, we used the Google Cloud Vision API to detect and extract t
 
 ## Accomplishments that we're proud of🏆
 
-**Victoria:**
+**Victoria:** It was super fun learning about the tools in Figma and about text-detection in ReactNative, I worked on a little bit of everything and I definitely expanded my skill set this hackathon! 
 
 **Anusha:** It was my first time using React Native! I’m proud I was able to successfully integrate the app with firebase and the Google Cloud Vision API!
 
