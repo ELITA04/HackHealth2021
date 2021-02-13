@@ -1,5 +1,6 @@
 # HelpVu
 **An AI powered narration application for the visually impaired.**
+To test out our app, check out the `README` files in the OCR and ObjectDetection folders!
 
 ## Inspiration ✨
 
