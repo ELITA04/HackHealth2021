@@ -1,13 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import React from 'react'
+// import { StyleSheet, Text, View, Button } from 'react-native';
+// import React from 'react'
 
 import ProfileScreen from './screens/Profile';
 import ObjectRecognitionScreen from './screens/ObjectRecognition';
 import OCRScreen from './screens/OCR';
+
+import React from 'react';
+import {
+  ActivityIndicator,
+  Button,
+  Clipboard,
+  Image,
+  Share,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  View,
+} from 'react-native';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import uuid from 'uuid';
+import Environment from "./config/environment";
+import firebase from "./config/firebase";
 
 const Stack = createStackNavigator();
 

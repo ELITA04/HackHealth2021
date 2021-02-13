@@ -9,6 +9,7 @@ target 'OCR' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
+  pod ‘react-native-camera’, path: ‘../node_modules/react-native-camera’, subspecs: [ ‘TextDetector’ ]
 
   # Uncomment the code below to enable Flipper.
   #
