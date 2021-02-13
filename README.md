@@ -3,13 +3,14 @@ Submission for HackHealth 2021
 
 
 --------
-# To run Text Detection (React Native)
+# Run Text Detection (React Native)
+### Run the app using expo
 1. Install expo `npm install --global expo-cli`
 2. `cd OCR`
 3. install all missing dependencies: `npm install`
 4. `expo start`
 
-# To connect to Firebase and the Google Cloud Vision API:
+### To connect to Firebase and the Google Cloud Vision API:
 1. Create a firebase web app to get firebase api keys and database url
 2. Add the Google Cloud Vision API to your firebase wep app and get the google cloud vision API key
 3. Create a file called `secrets.js` within the `OCR` folder (path will be `/OCR/secrets.js`
