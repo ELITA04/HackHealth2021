@@ -1,0 +1,10 @@
+{
+  "defaultProject": "TFJS-ObjectDetection",
+  "projects": {
+    "TFJS-ObjectDetection": {
+      "name": "TFJS-ObjectDetection",
+      "integrations": {},
+      "type": "angular"
+    }
+  }
+}
