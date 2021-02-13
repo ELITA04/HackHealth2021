@@ -8,7 +8,13 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Run on android/firefox with ssl for testing mobile view
 
-ng serve --host 0.0.0.0 --ssl true
+`ng serve --host 0.0.0.0 --ssl true`
+
+## For wrapping framework to native container
+
+`ng build --prod --aot`
+`cordova build android`
+`cordova run android`
 
 ## Code scaffolding
 
